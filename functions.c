@@ -60,12 +60,12 @@ char *_strdup(char *str)
 {
 	char *a;
 
-	if (str == '\0')
+	if (*str == '\0')
 	{
 		return (NULL);
 	}
 	a = malloc(_strlen(str) * sizeof(char) + 1);
-	if (a == '\0')
+	if (*a == '\0')
 	{
 		return (NULL);
 	}
