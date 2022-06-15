@@ -1,49 +1,30 @@
-#include "shell.h"
-/**
- * main - Holberton Shell
- * @ac: counter of argumments to receive
- * @av: pointer to args to receive
- * Return: 0 on success.
- */
-int main(int ac, char **av)
-{
-	char *string = NULL;
-	pid_t child;
-	size_t MaxSize = 1024;
-	int ret = 0, errors = 1;
-	char **toktok = NULL;
-	char *exi = "exit\n";
-	char *envi = "env\n";
-	char *validate = "\n";
-	(void)ac;
+#ifndef SHELL_H
+#define SHELL_H
 
-	signal(SIGINT, handler);
-	while (1)
-	{
-		if (isatty(STDIN_FILENO) == 1)
-			write(STDOUT_FILENO, "#cisfun$ ", 9);
-		ret = getline(&string, &MaxSize, stdin);
-		ctrl_d(ret, string);
-		if (_strcmp(string, envi) == 0)
-		{
-			_printenv();
-		}
-		if (_strcmp(string, exi) == 0)
-		{
-			free(string);
-			exit(EXIT_SUCCESS);
-		}
-		if (_strcmp(string, validate) == 0)
-			continue;
-		child = fork();
-		if (fork_process(child, string, toktok) == -1)
-		{
-			validate_input(&string, av[0], errors);
-			_free(toktok);
-			exit(EXIT_FAILURE);
-		}
-		errors++;
-	}
-	free(string);
-	return (0);
-}
+#include <stdio.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <string.h>
+#include <stdlib.h>
+#include <signal.h>
+#include <unistd.h>
+
+extern char **environ;
+char **tokens(char *string);
+int _path(char **argv);
+char *_which(char *str1, char *str2);
+char *_getenv(char *name);
+void _free(char **str);
+void _printenv(void);
+void handler(int han);
+int ctrl_d(int ret, char *string);
+int fork_process(pid_t child, char *string, char **toktok);
+char *_itoa(size_t nerrors);
+void validate_input(char **string, char *name, int errors);
+/* string functions */
+int _strcmp(char *s1, char *s2);
+char *_strcpy(char *dest, char *src);
+int _strlen(char *s);
+char *_strdup(char *str);
+#endif
